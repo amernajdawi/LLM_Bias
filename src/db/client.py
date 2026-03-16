@@ -172,9 +172,10 @@ def get_results(
 
 
 def list_run_keys(conn) -> List[tuple]:
+    """Return list of (model, dataset) pairs that exist in runs."""
     with conn.cursor() as cur:
         cur.execute("SELECT DISTINCT model, dataset FROM runs ORDER BY model, dataset")
-        return [tuple(row) for row in cur.fetchall()]
+        return [(row["model"], row["dataset"]) for row in cur.fetchall()]
 
 
 def list_runs_with_result_counts(conn) -> List[Dict[str, Any]]:
