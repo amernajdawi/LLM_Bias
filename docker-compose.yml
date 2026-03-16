@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: llmbias
+      POSTGRES_PASSWORD: llmbias
+      POSTGRES_DB: llmbias
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U llmbias"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://llmbias:llmbias@postgres:5432/llmbias
+      HF_TOKEN: ${HF_TOKEN:-}
+      HUGGINGFACE_HUB_TOKEN: ${HF_TOKEN:-}
+      # Use Qwen 0.5B so runs complete on Mac Docker (3B OOMs without GPU). Set to "0" and give Docker 10GB+ RAM to use 3B.
+      LOW_MEMORY: "1"
+    ports:
+      - "8502:8501"   # Streamlit dashboard (host 8502 → container 8501; use if 8501 is in use)
+    volumes:
+      - .:/app
+      - ./outputs:/app/outputs
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["sleep", "infinity"]
+
+volumes:
+  pgdata:

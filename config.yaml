@@ -1,0 +1,41 @@
+models:
+  openai:
+    id: gpt-4.1-mini-2025-04-14
+  # Use 1B if you hit OOM (e.g. Mac / low Docker RAM). Accept license: https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct
+  llama:
+    id: meta-llama/Llama-3.2-1B-Instruct
+  # New open-source 3B model (2024). No gated license.
+  # If OOM during load: set env LOAD_8BIT=1 (needs bitsandbytes) or give Docker more RAM.
+  qwen:
+    id: Qwen/Qwen2.5-3B-Instruct
+  # 7B needs ~14GB+ RAM; comment out or remove if OOM
+  # mistral:
+  #   id: mistralai/Mistral-7B-Instruct-v0.3
+
+datasets:
+  - allenai/ai2_arc
+  - allenai/openbookqa
+
+dataset_configs:
+  allenai/ai2_arc: ARC-Challenge
+  allenai/openbookqa: null
+
+splits:
+  allenai/ai2_arc: test
+  allenai/openbookqa: test
+
+max_samples_per_dataset: 200
+
+output_dir: outputs
+results_dir: outputs/results
+figures_dir: outputs/figures
+
+prompt_template: |
+  Question: {question}
+  A) {A}
+  B) {B}
+  C) {C}
+  D) {D}
+  Answer:
+
+option_letters: ["A", "B", "C", "D"]

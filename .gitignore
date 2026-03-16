@@ -1,0 +1,11 @@
+.env
+.venv
+venv
+__pycache__
+*.pyc
+.python-version
+outputs/results/*.json
+outputs/figures/*.png
+data/
+*.egg-info
+.DS_Store

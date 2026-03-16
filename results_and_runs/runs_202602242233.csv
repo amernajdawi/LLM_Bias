@@ -1,0 +1,7 @@
+"id","model","dataset","created_at"
+b2d553bf-fb4c-438f-a9ef-178186dd9e7f,Qwen/Qwen2.5-0.5B-Instruct,allenai_ai2_arc,2026-02-15 15:08:52.417 +0100
+"44cc355e-6618-4eeb-9b8f-d58a7449e82b",Qwen/Qwen2.5-0.5B-Instruct,allenai_openbookqa,2026-02-15 15:41:23.768 +0100
+b8feef5e-901d-4b0f-b4dd-9250fd8d84f1,meta-llama/Llama-3.2-1B-Instruct,allenai_ai2_arc,2026-02-10 14:09:23.105 +0100
+"56e6feea-b2f0-48e3-b926-f30859b390f2",meta-llama/Llama-3.2-1B-Instruct,allenai_openbookqa,2026-02-10 14:09:23.493 +0100
+"70d936d9-b584-4e2b-8152-6982dd32de54",gpt-4.1-mini-2025-04-14,allenai_openbookqa,2026-02-10 14:09:23.902 +0100
+"67cf9ea3-a7b8-4c6d-bb5a-80bc7096d7c5",gpt-4.1-mini-2025-04-14,allenai_ai2_arc,2026-02-10 14:09:24.011 +0100
