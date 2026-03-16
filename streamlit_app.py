@@ -85,8 +85,8 @@ def _summary_one(key, results, letters):
 
 @st.cache_data(ttl=120)
 def load_summary_from_db():
-    """Fetch runs that have results and compute summary. Prefers the run with most results per (model, dataset)."""
-    from src.db.client import create_schema, get_results, list_runs_with_result_counts, _conn
+    """Fetch all results from the database per (model, dataset) and compute summary. Uses every run's data, not just one run per key."""
+    from src.db.client import create_schema, get_results, list_run_keys, _conn
     conn = _conn()
     if not conn:
         return None, None
@@ -94,21 +94,15 @@ def load_summary_from_db():
         create_schema(conn)
         cfg = load_config()
         letters = cfg.get("option_letters", ["A", "B", "C", "D"])
-        runs = list_runs_with_result_counts(conn)
-        # For each (model, dataset), keep the run that has the most results (so we show existing data)
-        best_per_key = {}
-        for r in runs:
-            n = int(r.get("n_results") or 0)
-            if n == 0:
-                continue
-            key = f"{r['model']}_{r['dataset']}"
-            if key not in best_per_key or n > best_per_key[key][0]:
-                best_per_key[key] = (n, r["run_id"])
+        # Get every (model, dataset) that has runs, then load ALL results for each (no single-run limit)
+        keys = list_run_keys(conn)
         summary = {}
-        for key, (_n, run_id) in best_per_key.items():
-            results = get_results(conn, run_id=str(run_id))
-            if results:
-                summary[key] = _summary_one(key, results, letters)
+        for model, dataset in keys:
+            results = get_results(conn, model=model, dataset=dataset)
+            if not results:
+                continue
+            key = f"{model}_{dataset}"
+            summary[key] = _summary_one(key, results, letters)
         return summary, letters
     finally:
         conn.close()
@@ -426,7 +420,7 @@ with tab1:
             **{f"Acc({L})": f"{acc.get(L, 0):.1%}" for L in letters},
         })
     df = pd.DataFrame(rows)
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    st.dataframe(df, width="stretch", hide_index=True)
 
 with tab2:
     for key in selected_runs:
@@ -440,7 +434,7 @@ with tab2:
                 st.write("**Option proportion (predicted vs ground truth)**")
                 fig, _ = _draw_figure_plotly(key, S, letters, "option_proportion")
                 if fig:
-                    st.plotly_chart(fig, use_container_width=True, key=f"option_proportion_{key.replace('/', '_')}")
+                    st.plotly_chart(fig, width="stretch", key=f"option_proportion_{key.replace('/', '_')}")
             if err_pred and err_correct and S.get("n_errors", 0) > 0:
                 st.write("**Failing-case (errors only)**")
                 fail_df = pd.DataFrame({
@@ -448,7 +442,7 @@ with tab2:
                     "% errors predicted at": [f"{err_pred.get(L, 0):.1%}" for L in letters],
                     "% errors where correct at": [f"{err_correct.get(L, 0):.1%}" for L in letters],
                 })
-                st.dataframe(fail_df, use_container_width=True, hide_index=True)
+                st.dataframe(fail_df, width="stretch", hide_index=True)
 
 with tab3:
     st.subheader("Statistical tests")
@@ -468,7 +462,7 @@ with tab3:
             "Significant?": "Yes" if chi2_data.get("is_significant", False) else "No",
         })
     if chi_rows:
-        st.dataframe(pd.DataFrame(chi_rows), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(chi_rows), width="stretch", hide_index=True)
     
     # Effect size
     st.write("### Sensitivity gap effect size (Cohen's d)")
@@ -491,7 +485,7 @@ with tab3:
             "Effect size": effect,
         })
     if effect_rows:
-        st.dataframe(pd.DataFrame(effect_rows), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(effect_rows), width="stretch", hide_index=True)
     
     # A vs D significance
     st.write("### Accuracy: Position A vs D significance test")
@@ -512,7 +506,7 @@ with tab3:
             "Significant?": "Yes" if sig_data.get("is_significant", False) else "No",
         })
     if sig_rows:
-        st.dataframe(pd.DataFrame(sig_rows), use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(sig_rows), width="stretch", hide_index=True)
     
     # Confidence intervals
     st.write("### Accuracy confidence intervals (95% CI)")
@@ -532,7 +526,7 @@ with tab3:
                     "95% CI lower": f"{ci_l.get('lower', 0):.1%}",
                     "95% CI upper": f"{ci_l.get('upper', 0):.1%}",
                 })
-            st.dataframe(pd.DataFrame(ci_rows), use_container_width=True, hide_index=True)
+            st.dataframe(pd.DataFrame(ci_rows), width="stretch", hide_index=True)
 
 with tab4:
     st.subheader("Internals & figures")
@@ -560,11 +554,11 @@ with tab4:
             path = fig_dir / f"{prefix}_{key.replace('/', '_')}.png"
             with cols[i % 2]:
                 if path.exists():
-                    st.image(str(path), caption=label, use_container_width=True)
+                    st.image(str(path), caption=label, width="stretch")
                 elif S:
                     fig, ok = _draw_figure_plotly(key, S, letters, prefix)
                     if ok:
-                        st.plotly_chart(fig, use_container_width=True, key=f"fig_{key.replace('/', '_')}_{prefix}")
+                        st.plotly_chart(fig, width="stretch", key=f"fig_{key.replace('/', '_')}_{prefix}")
                     else:
                         st.caption(f"{label}: no data")
                 else:
