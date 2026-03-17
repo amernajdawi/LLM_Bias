@@ -1,0 +1,16 @@
+id,model,dataset,created_at
+b8feef5e-901d-4b0f-b4dd-9250fd8d84f1,meta-llama/Llama-3.2-1B-Instruct,allenai_ai2_arc,2026-02-10 13:09:23.105000+00:00
+56e6feea-b2f0-48e3-b926-f30859b390f2,meta-llama/Llama-3.2-1B-Instruct,allenai_openbookqa,2026-02-10 13:09:23.493000+00:00
+70d936d9-b584-4e2b-8152-6982dd32de54,gpt-4.1-mini-2025-04-14,allenai_openbookqa,2026-02-10 13:09:23.902000+00:00
+67cf9ea3-a7b8-4c6d-bb5a-80bc7096d7c5,gpt-4.1-mini-2025-04-14,allenai_ai2_arc,2026-02-10 13:09:24.011000+00:00
+b2d553bf-fb4c-438f-a9ef-178186dd9e7f,Qwen/Qwen2.5-0.5B-Instruct,allenai_ai2_arc,2026-02-15 14:08:52.417000+00:00
+44cc355e-6618-4eeb-9b8f-d58a7449e82b,Qwen/Qwen2.5-0.5B-Instruct,allenai_openbookqa,2026-02-15 14:41:23.768000+00:00
+d0867bc8-40cb-4c2a-b0f3-aea340e5a2ec,gpt-oss:120b,allenai_ai2_arc,2026-03-12 21:16:41.826458+00:00
+1ff2926f-3589-4dcc-9351-6f8fb84fe339,gpt-oss:120b,allenai_openbookqa,2026-03-12 21:49:21.661053+00:00
+72967b1f-8ea0-4768-a9ab-2cea718b5fcf,kimi-k2-thinking:cloud,allenai_ai2_arc,2026-03-12 23:39:08.643291+00:00
+4ff62d19-102b-4459-9319-df6f21ba4d18,kimi-k2-thinking:cloud,allenai_openbookqa,2026-03-13 00:22:17.375717+00:00
+ae70be72-7671-48c9-b26a-ea81727b1d49,deepseek-v3.1:671b-cloud,allenai_ai2_arc,2026-03-13 01:44:06.560389+00:00
+177833f2-089a-401f-bc66-6bc378145108,deepseek-v3.1:671b-cloud,allenai_openbookqa,2026-03-13 03:03:03.878157+00:00
+5f110385-7ba4-4689-9153-70b3d7061949,ministral-3:14b-cloud,allenai_ai2_arc,2026-03-13 03:34:39.800839+00:00
+516655b3-c9c4-4e52-87bb-707a458d7043,ministral-3:14b-cloud,allenai_openbookqa,2026-03-13 15:59:04.284323+00:00
+49b91bd7-3b59-437d-913d-f1733e045ac5,glm-5:cloud,allenai_ai2_arc,2026-03-15 22:43:01.935206+00:00

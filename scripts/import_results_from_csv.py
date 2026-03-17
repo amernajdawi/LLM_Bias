@@ -4,6 +4,15 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List
 
+# Load .env so DATABASE_URL is set (project root, then cwd; shell export overrides)
+ROOT = Path(__file__).resolve().parent.parent
+try:
+    from dotenv import load_dotenv
+    load_dotenv(ROOT / ".env")
+    load_dotenv(Path.cwd() / ".env")
+except Exception:
+    pass
+
 from src.db.client import _conn, create_schema
 
 
@@ -76,9 +85,19 @@ def load_results_csv(path: Path) -> List[Dict[str, Any]]:
 
 
 def import_into_db(runs_csv: Path, results_csv: Path) -> None:
+    import os
     conn = _conn()
     if not conn:
-        raise SystemExit("Could not connect to database. Check DATABASE_URL.")
+        url = os.environ.get("DATABASE_URL", "")
+        if not url:
+            raise SystemExit(
+                "DATABASE_URL is not set. Add it to .env in the project root, or run:\n"
+                '  export DATABASE_URL="postgresql://user:pass@host:port/dbname"\n'
+                "For Railway: use DATABASE_PUBLIC_URL from the Postgres service Variables."
+            )
+        raise SystemExit(
+            "Could not connect to the database. Check that Postgres is running and DATABASE_URL is correct."
+        )
     try:
         create_schema(conn)
         with conn.cursor() as cur:
@@ -89,6 +108,7 @@ def import_into_db(runs_csv: Path, results_csv: Path) -> None:
         runs = load_runs_csv(runs_csv)
         results = load_results_csv(results_csv)
 
+        BATCH = 500  # commit every N results to avoid SSL/timeout on long transactions
         with conn.cursor() as cur:
             for r in runs:
                 cur.execute(
@@ -99,8 +119,9 @@ def import_into_db(runs_csv: Path, results_csv: Path) -> None:
                     """,
                     (r["id"], r["model"], r["dataset"], r["created_at"] or None),
                 )
+            conn.commit()
 
-            for r in results:
+            for i, r in enumerate(results):
                 cur.execute(
                     """
                     INSERT INTO results (
@@ -137,6 +158,8 @@ def import_into_db(runs_csv: Path, results_csv: Path) -> None:
                         json.dumps(r["probs_per_layer"]) if r["probs_per_layer"] is not None else None,
                     ),
                 )
+                if (i + 1) % BATCH == 0:
+                    conn.commit()
         conn.commit()
         print(f"Imported {len(runs)} runs and {len(results)} results.")
     finally:

@@ -49,6 +49,11 @@ def _conn(max_attempts: int = 5):
     url = os.environ.get("DATABASE_URL")
     if not url:
         return None
+    # Require SSL for remote hosts (e.g. Railway) to avoid "SSL error: unexpected eof"
+    if "localhost" not in url and "127.0.0.1" not in url:
+        sep = "&" if "?" in url else "?"
+        if "sslmode=" not in url.lower():
+            url = f"{url}{sep}sslmode=require"
     for _ in range(max_attempts):
         try:
             return psycopg.connect(url, row_factory=dict_row)

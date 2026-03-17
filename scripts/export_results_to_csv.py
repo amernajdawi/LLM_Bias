@@ -7,8 +7,16 @@ then import with Railway DATABASE_URL.
 import argparse
 import csv
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
+
+# Load .env from project root so DATABASE_URL is set when running from CLI
+ROOT = Path(__file__).resolve().parent.parent
+try:
+    from dotenv import load_dotenv
+    load_dotenv(ROOT / ".env", override=True)
+except Exception:
+    pass
 
 from src.db.client import _conn, create_schema
 
@@ -21,7 +29,7 @@ def export_to_csv(out_dir: Path) -> None:
         create_schema(conn)
         out_dir = Path(out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
-        ts = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+        ts = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
         runs_path = out_dir / f"runs_{ts}.csv"
         results_path = out_dir / f"results_{ts}.csv"
 
