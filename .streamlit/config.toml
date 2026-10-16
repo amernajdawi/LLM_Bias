@@ -6,14 +6,26 @@ gatherUsageStats = false
 
 [theme.light]
 primaryColor = "#256abf"
-backgroundColor = "#fcfcfb"
-secondaryBackgroundColor = "#f1f0ed"
-textColor = "#0b0b0b"
+backgroundColor = "#fbfbfa"
+secondaryBackgroundColor = "#f1f1ee"
+textColor = "#14161b"
 linkColor = "#256abf"
+borderColor = "#e3e2dd"
+dataframeHeaderBackgroundColor = "#f1f1ee"
+font = "Public Sans:https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap, sans-serif"
+headingFont = "Newsreader:https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap, serif"
+baseRadius = "0.6rem"
+showWidgetBorder = true
 
 [theme.dark]
-primaryColor = "#5598e7"
-backgroundColor = "#1a1a19"
-secondaryBackgroundColor = "#262625"
-textColor = "#f0efec"
+primaryColor = "#6da7ec"
+backgroundColor = "#161718"
+secondaryBackgroundColor = "#222326"
+textColor = "#ecedef"
 linkColor = "#86b6ef"
+borderColor = "#33353a"
+dataframeHeaderBackgroundColor = "#222326"
+font = "Public Sans:https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap, sans-serif"
+headingFont = "Newsreader:https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap, serif"
+baseRadius = "0.6rem"
+showWidgetBorder = true
