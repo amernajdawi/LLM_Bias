@@ -1,0 +1,287 @@
+<title>Position Bias Re-measured</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+/* Layout: one reading column on cool exam-paper ground; wide tables scroll inside their own frame;
+   the A–D answer-position bars recur as the motif; old numbers carry a red-pen strike. */
+:root {
+  --paper: #f5f6f8;
+  --sheet: #ffffff;
+  --ink: #161a22;
+  --ink-2: #454c5a;
+  --muted: #646b78;
+  --rule: #dfe3ea;
+  --accent: #1f56b8;
+  --red-pen: #b42318;
+  --s-new: #2a78d6;
+  --s-old: #eb6834;
+  --s-fix: #1baf7a;
+  --grid: #e7eaf0;
+  --base: #c3c9d3;
+  --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --t-xs: 0.78rem;
+  --t-sm: 0.875rem;
+  --t-base: 1rem;
+  --t-lg: 1.3rem;
+  --t-xl: 1.75rem;
+  --t-2xl: 2.6rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #0e1116; --sheet: #151a21; --ink: #e8ebf1; --ink-2: #b9c0cc; --muted: #8e96a4;
+    --rule: #28303c; --accent: #8db4ff; --red-pen: #ff8a7a; --s-new: #3987e5; --s-old: #d95926; --s-fix: #199e70;
+    --grid: #212833; --base: #3a4350;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #0e1116; --sheet: #151a21; --ink: #e8ebf1; --ink-2: #b9c0cc; --muted: #8e96a4;
+  --rule: #28303c; --accent: #8db4ff; --red-pen: #ff8a7a; --s-new: #3987e5; --s-old: #d95926; --s-fix: #199e70;
+  --grid: #212833; --base: #3a4350;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--t-base);
+  line-height: 1.6;
+  padding-inline: 20px;
+}
+main { max-width: 46rem; margin-inline: auto; padding-block: 48px 72px; display: grid; gap: 2.75rem; }
+section, header { display: grid; gap: 1rem; }
+h1, h2 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: var(--t-2xl); line-height: 1.1; }
+h2 { font-size: var(--t-xl); line-height: 1.2; }
+h3 { font-size: var(--t-base); font-weight: 600; margin: 0; }
+p, ul { margin: 0; max-width: 65ch; }
+ul { padding-left: 1.2rem; display: grid; gap: 0.5rem; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.eyebrow { font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+.meta { color: var(--ink-2); font-size: var(--t-sm); }
+.lede { font-size: var(--t-lg); line-height: 1.45; color: var(--ink-2); font-family: var(--font-display); }
+
+.summary { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 1.25rem 1.5rem; display: grid; gap: 0.75rem; }
+.summary h2 { font-size: var(--t-lg); }
+
+figure { margin: 0; display: grid; gap: 0.6rem; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1rem 0.75rem; }
+figcaption { font-size: var(--t-sm); color: var(--muted); max-width: 65ch; }
+.chart { width: 100%; height: auto; display: block; }
+.chart .grid { stroke: var(--grid); stroke-width: 1; }
+.chart .base, .spark .base { stroke: var(--base); stroke-width: 1; }
+.chart .tick { fill: var(--muted); font-family: var(--font-body); font-size: 12px; font-variant-numeric: tabular-nums; }
+.bar.s-new { fill: var(--s-new); }
+.bar.s-old { fill: var(--s-old); }
+.bar:hover { opacity: 0.82; }
+.spark { width: 64px; height: 26px; display: block; }
+.legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; font-size: var(--t-sm); color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 0.45rem; }
+.key { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+.key.s-new { background: var(--s-new); }
+.key.s-old { background: var(--s-old); }
+.bar.s-fix { fill: var(--s-fix); }
+.key.s-fix { background: var(--s-fix); }
+.bar.s-gt { fill: transparent; stroke: var(--ink-2); stroke-width: 1.25; stroke-dasharray: 3 2; }
+.key.s-gt { background: transparent; border: 1.25px dashed var(--ink-2); box-sizing: border-box; }
+.picker { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.75rem; }
+.picker label { font-size: var(--t-sm); font-weight: 600; color: var(--ink-2); }
+.picker select { font: inherit; font-size: var(--t-sm); color: var(--ink); background: var(--sheet); border: 1px solid var(--rule); border-radius: 4px; padding: 0.4rem 0.55rem; max-width: 100%; }
+.picker select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.spread { display: grid; gap: 1rem; }
+.spread th[colspan] { text-align: center; border-bottom: 0; padding-bottom: 0; color: var(--ink-2); }
+
+.table-wrap { overflow-x: auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; font-size: var(--t-sm); }
+th { text-align: left; font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 600; padding: 0.65rem 0.7rem; border-bottom: 1px solid var(--rule); white-space: nowrap; vertical-align: bottom; }
+td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+th.num { text-align: right; }
+.slots span { display: inline-block; min-width: 2.6em; color: var(--ink-2); }
+.sub { display: block; font-size: var(--t-xs); color: var(--muted); }
+.sub-inline { font-size: var(--t-xs); color: var(--muted); }
+.forest { width: 132px; height: auto; display: block; flex: none; }
+.forest .zero { stroke: var(--base); stroke-width: 1; stroke-dasharray: 2 2; }
+.forest .ci { stroke: var(--s-new); stroke-width: 2; stroke-linecap: round; }
+.forest .pt { fill: var(--s-new); stroke: var(--sheet); stroke-width: 1.5; }
+.forest .pt.open { fill: var(--sheet); stroke: var(--s-new); stroke-width: 2; }
+.forest .tick { fill: var(--muted); font-family: var(--font-body); font-size: 10px; font-weight: 400; letter-spacing: 0; text-transform: none; }
+th .forest { margin-top: 0.35rem; }
+.gain { display: flex; align-items: center; gap: 0.6rem; }
+.gain .num { text-align: left; }
+table.methods th[colspan] { text-align: left; border-bottom: 0; padding-bottom: 0; color: var(--ink-2); }
+s.old { color: var(--red-pen); text-decoration-thickness: 1.5px; }
+.read-old { color: var(--red-pen); font-weight: 600; }
+.read-new { font-weight: 600; }
+code, .mono { font-family: var(--font-mono); font-size: 0.86em; }
+.note { font-size: var(--t-sm); color: var(--ink-2); border-left: 2px solid var(--rule); padding-left: 0.9rem; max-width: 65ch; }
+footer { font-size: var(--t-sm); color: var(--muted); border-top: 1px solid var(--rule); padding-top: 1rem; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<main>
+  <header>
+    <span class="eyebrow">Results update · position bias in multiple-choice QA</span>
+    <h1>Position Bias Re-measured</h1>
+    <p class="meta">ARC-Challenge and OpenBookQA test sets, 200 questions each · every question asked with the correct answer in each of the four positions · 3 October 2026</p>
+    <p class="lede">Most of the strong position bias in the earlier Ollama and API runs came from the way answers were read from the model's text. With a strict reader, the same models are accurate and only mildly sensitive to answer position.</p>
+  </header>
+
+  <section class="summary" aria-labelledby="sum">
+    <h2 id="sum">In short</h2>
+    <ul>
+      <li>gemma4:31b scored {{g_old}} on ARC-Challenge in the earlier run and {{g_new}} with the corrected protocol. The earlier figure came from the answer reader, not from the model.</li>
+      <li>With answers read correctly, the {{n_models}} re-run models reach {{acc_lo}}–{{acc_hi}} accuracy, and the gap between their best and worst answer position is {{gap_lo}}–{{gap_hi}} percentage points.</li>
+      <li>A small open model, Qwen2.5-0.5B, re-run with the same prompt, does have strong position bias: asked once, it picks {{q_slot}} for {{q_pull}} of prompts. A one-call, label-free prior correction raises its OpenBookQA accuracy from {{q_acc_b}} to {{q_acc_a}}. Averaging its probabilities over the four rotations raises it to {{q_la}}. {{other_open_short}}</li>
+      <li>{{vote_short}}</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="s1">
+    <h2 id="s1">Why the earlier numbers were wrong</h2>
+    <p>The earlier pipeline turned each reply into a letter in a way that invents answers. The local Ollama code took the first character A–D found anywhere in the reply, even inside a word. The cloud and OpenAI code took the first character and recorded "A" whenever it was not a letter. The prompt in <code>config.yaml</code> ended with "Answer:" and never asked for a single letter, and the raw replies were not stored.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Reply from the model</th><th>Earlier reading</th><th>Corrected reading</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">The correct answer is B.</td><td class="read-old">C</td><td class="read-new">B</td></tr>
+          <tr><td class="mono">Answer: D</td><td class="read-old">A</td><td class="read-new">D</td></tr>
+          <tr><td class="mono">We need to determine…</td><td class="read-old">D</td><td>invalid, asked again</td></tr>
+          <tr><td class="mono">Okay, let me think</td><td class="read-old">A</td><td>invalid, asked again</td></tr>
+          <tr><td class="mono">**B**</td><td class="read-old">A (cloud code)</td><td class="read-new">B</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The effect is visible in the saved results. gemma4:31b, qwen3.5:27b and llama3:8b gave the same letter for 196–200 of 200 questions, whichever position held the correct answer, which fixes accuracy at 25%. For the cloud models, 96–100% of all wrong answers were exactly "A", the code's fallback value.</p>
+    <figure>
+      {{hero_chart}}
+      <figcaption>gemma4:31b on ARC-Challenge, accuracy for each position of the correct answer. Old: local run with the earlier answer reader. Corrected: the same model on Ollama Cloud with the strict reader.</figcaption>
+    </figure>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Earlier run</th><th>Dataset</th><th class="num">Earlier accuracy</th><th class="num">Corrected accuracy</th><th class="num">Same letter in all 4 positions (earlier)</th><th class="num">Unreadable (corrected)</th></tr></thead>
+        <tbody>{{ba_rows}}</tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="s2">
+    <h2 id="s2">Position bias with answers read correctly</h2>
+    <p>Accuracy for each position of the correct answer, with letters A–D as labels. The gap is the best minus the worst position, in percentage points. RStd is the standard deviation of the four position accuracies. CircularEval counts questions answered correctly in all four rotations. Fluctuation counts questions whose chosen option changes when only the order changes.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>Dataset</th><th class="num">Accuracy</th><th>By position</th><th class="num">A · B · C · D (%)</th><th class="num">Gap</th><th class="num">RStd</th><th class="num">CircularEval</th><th class="num">Fluctuation</th><th class="num">Unreadable</th></tr></thead>
+        <tbody>{{bias_rows}}</tbody>
+      </table>
+    </div>
+    <p class="note">Example of an unreadable reply: OpenBookQA question 7-1122 reads "The lowest temperature on the trip was at", but no trip is described. gemma4:31b asked for the missing text in all four rotations, so these replies are marked invalid. The earlier code would have recorded "A", which is the official answer, and counted them as correct.</p>
+  </section>
+
+  <section aria-labelledby="s2b">
+    <h2 id="s2b">Where the answers go</h2>
+    <p>The same view as the project dashboard, for the corrected runs. Outlined bars show how often each position holds the correct answer; because every question is asked in all four rotations, this is 25% everywhere. Filled bars show how often the model answers with each position. For {{spread_earlier}}, the earlier run of the same model is shown in orange. For Qwen2.5-0.5B, whose bias is real, green bars show the new run after the label-free prior correction (one call per question). The table looks only at wrong answers: which position the model picked, and where the correct answer was.</p>
+    <div class="picker">
+      <label for="spread-pick">Run</label>
+      <select id="spread-pick">{{spread_options}}</select>
+    </div>
+    {{spread_panels}}
+    <script>
+      (() => {
+        const pick = document.getElementById("spread-pick");
+        const panels = document.querySelectorAll("[data-spread]");
+        const show = () => panels.forEach((p) => { p.hidden = p.dataset.spread !== pick.value; });
+        pick.addEventListener("change", show);
+        show();
+      })();
+    </script>
+  </section>
+
+  <section aria-labelledby="s3">
+    <h2 id="s3">Letters or numbers</h2>
+    <p>The same questions and rotations, labelled (1)–(4) instead of A–D, with the same reading rules for both formats.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>Dataset</th><th class="num">Letters</th><th class="num">Numbers</th><th class="num">Gap, letters</th><th class="num">Gap, numbers</th><th class="num">Only letters right / only numbers right</th><th class="num">McNemar p</th></tr></thead>
+        <tbody>{{ln_rows}}</tbody>
+      </table>
+    </div>
+    <p>{{ln_text}}</p>
+  </section>
+
+  <section aria-labelledby="s4">
+    <h2 id="s4">Reducing the bias</h2>
+    <p>Majority voting asks the four rotations and keeps the option chosen most often, as in the calibration of Pezeshkpour and Hruschka (2024). PAV, the method proposed here, also uses the four rotations. Without any answer key, it learns how strongly the model is pulled toward each position (a 4×4 table fitted with the EM algorithm of Dawid and Skene). It then weights each vote by how informative it is: an option picked from a position the model usually avoids counts more than one picked from its favourite position. PAV-adaptive asks the rotations one at a time and stops when it is 95% sure. Majority with early stop asks two random rotations and stops if they agree. Ties count as a fractional share, never as a lucky guess.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>Dataset</th><th>Labels</th><th class="num">One order</th><th class="num">Majority (4 calls)</th><th class="num">PAV (4 calls)</th><th class="num">PAV − majority, 95% CI (points)</th><th class="num">PAV-adaptive</th><th class="num">Majority, early stop</th></tr></thead>
+        <tbody>{{mit_rows}}</tbody>
+      </table>
+    </div>
+    <p>{{mit_text}} The cloud models have little bias left to remove, so the next section tests every method on a small model that does have it.</p>
+    <p class="note">The earlier three-step mitigation (PINE-style yes/no checks, numeric labels, label rotation) is no longer used. On the earlier data its yes/no step was the weakest part, and adding it was not significantly better than numbers or rotation alone in any of the 12 comparisons. A 2026 study by Hanna and Feng also found that scoring each option in isolation does not reliably raise accuracy.</p>
+  </section>
+
+  <section aria-labelledby="s5">
+    <h2 id="s5">Small open models with real position bias</h2>
+    <p>Qwen2.5-0.5B-Instruct was re-run on this server's CPU with the same {{q_n}} questions per dataset, the same prompt and the same four rotations as the cloud models. Its answer is the label with the highest next-token probability, so no text is parsed. {{q_mass}} of the next-token probability falls on the four labels, so the model does reply with a label.</p>
+    <figure>
+      {{qwen_chart}}
+      <figcaption>Qwen2.5-0.5B on OpenBookQA with letters: accuracy for each position of the correct answer, asked once and with the label-free prior correction.</figcaption>
+    </figure>
+    <p>Asked once, the model picks {{q_slot}} for {{q_pull}} of prompts. It is right {{q_fav_acc}} of the time when the correct answer is in that position and {{q_other_acc}} of the time otherwise. The table compares every method on the same questions. No method uses the answer key; the key is only used for scoring.</p>
+    <div class="table-wrap">
+      <table class="methods">
+        <thead>
+          <tr><th rowspan="2">Method</th><th rowspan="2" class="num">Calls per question</th><th colspan="2">ARC-Challenge</th><th colspan="2">OpenBookQA</th></tr>
+          <tr><th class="num">Accuracy</th><th>Gain over asking once, points{{q_axis}}</th><th class="num">Accuracy</th><th>Gain over asking once, points{{q_axis}}</th></tr>
+        </thead>
+        <tbody>{{qwen_rows}}</tbody>
+      </table>
+    </div>
+    <p class="meta">Dot: gain in accuracy points. Line: 95% bootstrap interval over questions. A filled dot is significant after Holm correction over all comparisons with asking once (two-sided sign-flip test). Calls for PAV-adaptive are given as ARC / OpenBookQA.</p>
+    <ul>
+      <li>{{q_t_one}}</li>
+      <li>{{q_t_avg}}</li>
+      <li>{{q_t_vote}}</li>
+      {{q_t_num}}
+    </ul>
+    <h3>Do the fixes work on other small models?</h3>
+    <p>The same methods on every open-weight model run so far, with letters. Each cell shows the accuracy and, below it, the gain over asking once in points; bold gains are significant after Holm correction within that model. "Answers with a label" is the share of next-token probability that falls on A–D; when it is low, the model often starts its reply with something else.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>Dataset</th><th class="num">Answers with a label</th><th class="num">Ask once<span class="sub">1 call</span></th><th class="num">Prior correction<span class="sub">1 call</span></th><th class="num">PriDe<span class="sub">1 call</span></th><th class="num">Majority vote<span class="sub">4 calls</span></th><th class="num">PAV<span class="sub">4 calls</span></th><th class="num">Log-prob. average<span class="sub">4 calls</span></th></tr></thead>
+        <tbody>{{open_rows}}</tbody>
+      </table>
+    </div>
+    <p class="note">An earlier run (March 2026) used the older prompt, which ended with "Answer:" and gave no instruction. Qwen2.5-0.5B then preferred A instead of D, with a similar gap, so the direction of the pull depends on the prompt. In that run, Llama-3.2-1B answered "A" for 99% of prompts, but its four letter probabilities averaged 26%, 25%, 25% and 25%. It barely preferred any option, and after correction it was at chance level.</p>
+  </section>
+
+  <section aria-labelledby="s6">
+    <h2 id="s6">How the corrected runs were done</h2>
+    <ul>
+      <li>Models re-run with the corrected protocol: {{models}}. Three models from the earlier runs were retired by Ollama and could not be re-run: kimi-k2-thinking (16 June 2026), deepseek-v3.1:671b and glm-5 (15 July 2026). ministral-3:14b was also retired on Ollama Cloud, so the same model was re-run on a local GPU (4-bit copy).</li>
+      <li>Each question was asked four times in each format, rotating all four options so every option appears once in every position.</li>
+      <li>Prompt: the question, the options as <code>A) …</code> or <code>(1) …</code>, then "Reply with only the letter of the correct option (A, B, C, or D)." Temperature 0. Thinking was switched off where the model allows it; gpt-oss ran with low reasoning effort.</li>
+      <li>Answer reading accepts only a standalone label, "Answer: X", "option X", or the full text of one option. Anything else is marked invalid and asked once more with Ollama's structured output limited to the four labels. The cloud service did not always enforce that format, and replies that stay unreadable remain invalid. Invalid answers are never counted as "A".</li>
+      <li>Every raw reply is stored next to the parsed answer.</li>
+      <li>Open-weight models ({{hf_models}}) ran locally with Hugging Face transformers (the model's chat template). Their four label probabilities are stored for every prompt, so every method above is computed from the same 1,600 model calls per label format.</li>
+      <li>Statistics use exact McNemar tests for paired comparisons of single prompts and 95% bootstrap intervals over questions (5,000 resamples). The Qwen method comparison uses a two-sided sign-flip test over questions with Holm correction.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="s7">
+    <h2 id="s7">Next steps</h2>
+    <ul>
+      <li>Repeat the Qwen test on one or two more small open models (for example Llama-3.2-1B and Qwen2.5-1.5B with the corrected prompt) to check that the gain from probability averaging holds beyond one model.</li>
+      <li>Re-run the local open models from the earlier report (qwen3.5:27b, llama3:8b, qwen2.5:7b) with the corrected protocol once GPU time is free, or drop them from the thesis.</li>
+      <li>Connect the pull toward D of Qwen2.5-0.5B to its attention and layer-wise results, as planned for the internals chapter.</li>
+    </ul>
+  </section>
+
+  <footer>Generated from the stored replies in <code>experiments/v3_corrected/</code>. References: Pezeshkpour &amp; Hruschka, NAACL Findings 2024; Zheng et al., ICLR 2024 (PriDe, RStd); Liu et al., MMBench (CircularEval), ECCV 2024; Zhou et al., Batch Calibration, ICLR 2024; Dawid &amp; Skene, 1979; Hanna &amp; Feng, arXiv 2608.11947, 2026; Wang et al., "My Answer is C", ACL Findings 2024.</footer>
+</main>
