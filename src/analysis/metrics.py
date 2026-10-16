@@ -279,19 +279,3 @@ def anchored_bias_frequency(results: List[dict], letters: List[str]) -> float:
             if pred == anchor_pos:  # but model predicted 'A'
                 anchored_count += 1
     return anchored_count / total_non_anchor if total_non_anchor > 0 else 0.0
-
-
-def failing_cases_where_predicted_anchor(results: List[dict], letters: List[str]) -> List[dict]:
-    """
-    Filter to failing cases where model predicted anchor position ('A') but correct is not 'A'.
-    This aligns with ACL 2025's focus on analyzing failing cases to understand bias.
-    """
-    if not letters:
-        return []
-    anchor_pos = letters[0]
-    return [
-        r for r in results
-        if r.get("pred") == anchor_pos
-        and r.get("correct_label") != anchor_pos
-        and r.get("correct_label") in letters
-    ]

@@ -1,6 +1,6 @@
 """
-Streamlit dashboard for the corrected (v3) position-bias results. Same layout and metrics as
-streamlit_app.py, but it reads dashboard_data/v3_dashboard.json (no database needed).
+Streamlit dashboard for the corrected (v3) position-bias results. Reads
+dashboard_data/v3_dashboard.json (no database needed).
 
     .venv/bin/python3 -m streamlit run dashboard_v3.py
 Refresh the data: bash experiments/v3_corrected/update_results.sh && .venv/bin/python3 experiments/v3_corrected/export_dashboard.py

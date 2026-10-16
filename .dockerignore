@@ -4,9 +4,8 @@ venv
 .git
 __pycache__
 *.pyc
-outputs
-data
-docs
-papers
 *.md
+experiments
+results_and_runs
+data_*.json
 .dockerignore
