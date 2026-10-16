@@ -1,7 +1,8 @@
 # Results dashboard (dashboard_v3.py). Small image: no database, no torch.
 FROM python:3.12-slim
 WORKDIR /app
-RUN pip install --no-cache-dir "streamlit>=1.40" "pandas>=2.0" "plotly>=5.20"
+RUN pip install --no-cache-dir "streamlit==1.54.0" "pandas==2.3.3" "plotly==6.5.2"
+COPY .streamlit ./.streamlit
 COPY src/analysis/__init__.py src/analysis/metrics.py ./src/analysis/
 COPY dashboard_data ./dashboard_data
 COPY dashboard_v3.py ./

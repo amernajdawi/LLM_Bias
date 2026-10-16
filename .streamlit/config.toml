@@ -1,0 +1,19 @@
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
+
+[theme.light]
+primaryColor = "#256abf"
+backgroundColor = "#fcfcfb"
+secondaryBackgroundColor = "#f1f0ed"
+textColor = "#0b0b0b"
+linkColor = "#256abf"
+
+[theme.dark]
+primaryColor = "#5598e7"
+backgroundColor = "#1a1a19"
+secondaryBackgroundColor = "#262625"
+textColor = "#f0efec"
+linkColor = "#86b6ef"

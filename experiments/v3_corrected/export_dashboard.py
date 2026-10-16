@@ -43,7 +43,7 @@ def to_metric_rows(rows, fmt):
     out = []
     for r in rows:
         pick = r.get("pick_slot")
-        row = {"item_id": r["item_id"], "pred": labels[pick] if pick is not None else None,
+        row = {"item_id": r["item_id"], "rotation": r["rotation"], "pred": labels[pick] if pick is not None else None,
                "correct_label": labels[r["gold_slot"]], "correct": int(r["correct"])}
         if "probs" in r:
             row["prob_correct"] = round(r["probs"][r["gold_slot"]], 5)
@@ -78,6 +78,8 @@ def main():
                 "rows": to_metric_rows(rows, fmt),
                 "methods": {k: {x: v[x] for x in ("accuracy", "calls", "vs_single") if x in v} for k, v in methods.items()},
                 "prior_corrected_picks": (res.get("spread_prior_heldout") or {}).get("pred_share_all"),
+                "label_mass": res.get("label_mass_mean"),                                   # probability runs
+                "unreadable": (res.get("bias") or {}).get("invalid_final"),                  # text runs
             }
             # earlier run of the same model (letters only), as in the report
             src = None
